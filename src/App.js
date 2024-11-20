@@ -9,7 +9,7 @@ function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch('/api/auth/session', {
+    fetch('${process.env.REACT_APP_API_BASE_URL}/auth/session', {
         credentials: 'include', // Include session cookies
     })
         .then((response) => {
