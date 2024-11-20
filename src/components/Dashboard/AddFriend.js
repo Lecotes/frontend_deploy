@@ -4,7 +4,7 @@ function AddFriendModal({ user, onClose }) {
   const [email, setEmail] = useState("");
 
   const handleAddFriend = () => {
-    fetch(`/api/friends/request`, {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/friends/request`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ senderId: user.userId, receiverEmail: email }),
