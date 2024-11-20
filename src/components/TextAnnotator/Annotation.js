@@ -5,7 +5,7 @@ const Annotation = ({ annotation, replies, userId, deleteAnnotation }) => {
 
     const addReply = async () => {
         try {
-            await fetch(`/api/annotations/${annotation.id}/reply`, {
+            await fetch(`${process.env.REACT_APP_API_BASE_URL}/annotations/${annotation.id}/reply`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, content: replyText }),
