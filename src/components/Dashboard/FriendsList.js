@@ -8,7 +8,7 @@ function FriendsList({ user }) {
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false); // State for modal visibility
 
   const fetchFriends = () => {
-    fetch(`/api/friends/list?userId=${user.userId}`)
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/friends/list?userId=${user.userId}`)
       .then((response) => response.json())
       .then((data) => setFriends(data))
       .catch((error) => console.error("Error fetching friends list:", error));
