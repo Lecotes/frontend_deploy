@@ -19,7 +19,7 @@ const TextAnnotator = ({ user }) => {
         if (!textId) return;
 
         try {
-            const response = await fetch(`/api/texts/${textId}`);
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/texts/${textId}`);
             if (!response.ok) throw new Error(`Failed to fetch text or annotations: ${response.statusText}`);
 
             const data = await response.json();
@@ -57,7 +57,7 @@ const TextAnnotator = ({ user }) => {
     const addAnnotation = async (comment) => {
         if (selectedText && selectedRange) {
             try {
-                await fetch('/api/annotations/create', {
+                await fetch('${process.env.REACT_APP_API_BASE_URL}/annotations/create', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -79,7 +79,7 @@ const TextAnnotator = ({ user }) => {
 
     const addReplyToAnnotation = async (annotationId, replyContent) => {
         try {
-            await fetch('/api/annotations/reply', {
+            await fetch('${process.env.REACT_APP_API_BASE_URL}/annotations/reply', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -113,7 +113,7 @@ const TextAnnotator = ({ user }) => {
 
     const deleteReply = async (replyId) => {
         try {
-            const response = await fetch(`/api/annotations/reply/${replyId}/delete`, {
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/annotations/reply/${replyId}/delete`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId: user.userId }),
@@ -131,7 +131,7 @@ const TextAnnotator = ({ user }) => {
 
     const voteAnnotation = async (id, voteValue) => {
         try {
-            const response = await fetch(`/api/annotations/${id}/vote`, {
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/annotations/${id}/vote`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId: user.userId, voteValue }),
@@ -147,7 +147,7 @@ const TextAnnotator = ({ user }) => {
 
     const voteReply = async (replyId, voteValue) => {
         try {
-            const response = await fetch(`/api/annotations/${replyId}/reply-vote`, {
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/annotations/${replyId}/reply-vote`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId: user.userId, voteValue }),
