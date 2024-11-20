@@ -9,7 +9,7 @@ function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch('${process.env.REACT_APP_API_BASE_URL}/auth/session', {
+    fetch('https://lecotes-backend.onrender.com/api/auth/session', {
         credentials: 'include', // Include session cookies
     })
         .then((response) => {

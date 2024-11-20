@@ -24,7 +24,7 @@ function Dashboard({ user, setUser }) {
   }, [fetchTexts]);
 
   const handleLogout = () => {
-    fetch("${process.env.REACT_APP_API_BASE_URL}/auth/logout", { method: "POST" })
+    fetch("https://lecotes-backend.onrender.com/api/auth/logout", { method: "POST" })
       .then(() => setUser(null))
       .catch((error) => console.error("Error logging out:", error));
   };
