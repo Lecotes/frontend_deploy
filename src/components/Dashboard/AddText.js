@@ -8,7 +8,7 @@ function AddText({ user, onClose, refreshTexts }) {
   const [searchQuery, setSearchQuery] = useState(""); // For friend search
 
   useEffect(() => {
-    fetch(`/api/friends/list?userId=${user.userId}`)
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/friends/list?userId=${user.userId}`)
       .then((response) => response.json())
       .then((data) => setFriends(data))
       .catch((error) => console.error("Error fetching friends:", error));
@@ -23,7 +23,7 @@ function AddText({ user, onClose, refreshTexts }) {
   };
 
   const handleSubmit = () => {
-    fetch("/api/texts/create", {
+    fetch("${process.env.REACT_APP_API_BASE_URL}/texts/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
