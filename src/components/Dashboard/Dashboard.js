@@ -13,7 +13,7 @@ function Dashboard({ user, setUser }) {
   const navigate = useNavigate();
 
   const fetchTexts = useCallback(() => {
-    fetch(`/api/texts?userId=${user.userId}`)
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/texts?userId=${user.userId}`)
       .then((response) => response.json())
       .then((data) => setTexts(data))
       .catch((error) => console.error("Error fetching texts:", error));
@@ -24,7 +24,7 @@ function Dashboard({ user, setUser }) {
   }, [fetchTexts]);
 
   const handleLogout = () => {
-    fetch("/api/auth/logout", { method: "POST" })
+    fetch("${process.env.REACT_APP_API_BASE_URL}/auth/logout", { method: "POST" })
       .then(() => setUser(null))
       .catch((error) => console.error("Error logging out:", error));
   };
@@ -34,7 +34,7 @@ function Dashboard({ user, setUser }) {
   };
 
   const handleDeleteText = (id) => {
-    fetch(`/api/texts/${id}`, {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/texts/${id}`, {
       method: 'DELETE',
     })
       .then((response) => {
