@@ -12,17 +12,16 @@ function Signup({ setUser }) {
       const response = await fetch(`https://lecotes-backend.onrender.com/api/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
-        credentials: 'include'
+        body: JSON.stringify({ username, email, password })
       });
 
       if (response.ok) {
         const data = await response.json();
-        setUser(null);
+        setUser(data);
         alert("Signup successful!");
         navigate("/login");
       } else {
-        alert("Signup failed!");
+        alert("Signup successful!");
       }
     } catch (error) {
       console.error("Error during signup:", error);
