@@ -2,3 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+.prose {
+    overflow-wrap: break-word; /* Allows long words to be broken and wrap onto the next line */
+    word-wrap: break-word; /* For older browsers */
+    white-space: normal; /* Ensures that text wraps normally */
+}
