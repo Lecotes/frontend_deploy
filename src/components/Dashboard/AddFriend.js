@@ -8,6 +8,7 @@ function AddFriendModal({ user, onClose }) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ senderId: user.userId, receiverEmail: email }),
+      credentials: 'include'
     })
       .then((response) => {
         if (response.ok) {

@@ -19,7 +19,9 @@ const TextAnnotator = ({ user }) => {
         if (!textId) return;
 
         try {
-            const response = await fetch(`https://lecotes-backend.onrender.com/api/texts/${textId}`);
+            const response = await fetch(`https://lecotes-backend.onrender.com/api/texts/${textId}`, {
+                credentials: 'include',
+              });
             if (!response.ok) throw new Error(`Failed to fetch text or annotations: ${response.statusText}`);
 
             const data = await response.json();

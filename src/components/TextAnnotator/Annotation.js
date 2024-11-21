@@ -9,6 +9,7 @@ const Annotation = ({ annotation, replies, userId, deleteAnnotation }) => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, content: replyText }),
+                credentials: 'include'
             });
             setReplyText('');
         } catch (err) {
