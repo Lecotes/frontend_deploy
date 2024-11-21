@@ -13,7 +13,7 @@ function Dashboard({ user, setUser }) {
   const navigate = useNavigate();
 
   const fetchTexts = useCallback(() => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/texts?userId=${user.userId}`)
+    fetch(`https://lecotes-backend.onrender.com/api/texts?userId=${user.userId}`)
       .then((response) => response.json())
       .then((data) => setTexts(data))
       .catch((error) => console.error("Error fetching texts:", error));
@@ -34,7 +34,7 @@ function Dashboard({ user, setUser }) {
   };
 
   const handleDeleteText = (id) => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/texts/${id}`, {
+    fetch(`https://lecotes-backend.onrender.com/api/texts/${id}`, {
       method: 'DELETE',
     })
       .then((response) => {

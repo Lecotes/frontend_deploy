@@ -13,6 +13,10 @@ const TextAnnotator = ({ user }) => {
     const [title, setTitle] = useState('');
     const [expandedReplies, setExpandedReplies] = useState({});
     const [replyContent, setReplyContent] = useState('');
+    const [editingAnnotationId, setEditingAnnotationId] = useState(null);
+    const [editingReplyId, setEditingReplyId] = useState(null);
+    const [editContent, setEditContent] = useState('');
+
 
     // Fetch text, annotations, and replies
     const fetchAnnotations = async () => {
@@ -170,6 +174,36 @@ const TextAnnotator = ({ user }) => {
         }));
     };
 
+    const editAnnotation = async (annotationId) => {
+        try {
+            await fetch(`https://lecotes-backend.onrender.com/api/annotations/${annotationId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: editContent }),
+            });
+            setEditingAnnotationId(null); // Exit edit mode
+            fetchAnnotations(); // Refresh data
+        } catch (err) {
+            console.error('Error editing annotation:', err);
+        }
+    };
+    
+    const editReply = async (replyId) => {
+        try {
+            await fetch(`https://lecotes-backend.onrender.com/api/annotations/reply/${replyId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: editContent }),
+            });
+            setEditingReplyId(null); // Exit edit mode
+            fetchAnnotations(); // Refresh data
+        } catch (err) {
+            console.error('Error editing reply:', err);
+        }
+    };
+    
+
+
     const renderHighlightedText = () => {
         if (!text) return null;
 
@@ -209,9 +243,9 @@ const TextAnnotator = ({ user }) => {
         const annotationReplies = replies
             .filter((reply) => reply.annotation_id === annotationId)
             .sort((a, b) => b.votes - a.votes);
-
+    
         const areRepliesExpanded = expandedReplies[annotationId];
-
+    
         return (
             <div>
                 <button
@@ -220,45 +254,71 @@ const TextAnnotator = ({ user }) => {
                 >
                     {areRepliesExpanded ? 'Collapse Replies' : 'Expand Replies'}
                 </button>
-
-                {areRepliesExpanded && annotationReplies.map((reply, index) => (
-                    <div
-                        key={reply.id}
-                        className={`p-2 mt-2 border rounded ${
-                            index === 0 ? 'bg-blue-100' : 'bg-gray-50'
-                        }`}
-                    >
-                        <p>{reply.content}</p>
-                        <small className="text-gray-500">By: {reply.username}</small>
-                        {index === 0 && <span className="ml-2 text-xs text-blue-700">Top Rated</span>}
-                        <div className="flex items-center mt-2 space-x-2">
-                            <button
-                                className="text-green-600 hover:text-green-800"
-                                onClick={() => voteReply(reply.id, 1)}
-                            >
-                                <ThumbUpIcon className="w-5 h-5" />
-                            </button>
-                            <span>{reply.votes}</span>
-                            <button
-                                className="text-red-600 hover:text-red-800"
-                                onClick={() => voteReply(reply.id, -1)}
-                            >
-                                <ThumbDownIcon className="w-5 h-5" />
-                            </button>
-                            {(reply.user_id === user.userId || text.owner_id === user.userId) && (
-                                <button
-                                    onClick={() => deleteReply(reply.id)}
-                                    className="text-red-700 hover:text-red-900 ml-2"
-                                >
-                                    <TrashIcon className="w-5 h-5" />
-                                </button>
+    
+                {areRepliesExpanded &&
+                    annotationReplies.map((reply) => (
+                        <div
+                            key={reply.id}
+                            className="p-2 mt-2 border rounded bg-gray-50"
+                        >
+                            {editingReplyId === reply.id ? (
+                                <textarea
+                                    className="w-full p-2 border rounded"
+                                    value={editContent}
+                                    onChange={(e) => setEditContent(e.target.value)}
+                                />
+                            ) : (
+                                <p>{reply.content}</p>
                             )}
+                            <small className="text-gray-500">By: {reply.username}</small>
+                            <div className="flex items-center mt-2 space-x-2">
+                                <button
+                                    className="text-green-600 hover:text-green-800"
+                                    onClick={() => voteReply(reply.id, 1)}
+                                >
+                                    <ThumbUpIcon className="w-5 h-5" />
+                                </button>
+                                <span>{reply.votes}</span>
+                                <button
+                                    className="text-red-600 hover:text-red-800"
+                                    onClick={() => voteReply(reply.id, -1)}
+                                >
+                                    <ThumbDownIcon className="w-5 h-5" />
+                                </button>
+                                {(reply.user_id === user.userId || text.owner_id === user.userId) && (
+                                    <>
+                                        <button
+                                            onClick={() => {
+                                                setEditingReplyId(reply.id);
+                                                setEditContent(reply.content);
+                                            }}
+                                            className="text-blue-600 hover:text-blue-800 ml-2"
+                                        >
+                                            Edit
+                                        </button>
+                                        {editingReplyId === reply.id && (
+                                            <button
+                                                onClick={() => editReply(reply.id)}
+                                                className="bg-green-500 text-white px-2 py-1 rounded ml-2"
+                                            >
+                                                Save
+                                            </button>
+                                        )}
+                                        <button
+                                            onClick={() => deleteReply(reply.id)}
+                                            className="text-red-700 hover:text-red-900 ml-2"
+                                        >
+                                            <TrashIcon className="w-5 h-5" />
+                                        </button>
+                                    </>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
             </div>
         );
     };
+    
 
     // Navigate back to the dashboard
     const handleBackToDashboard = () => {
@@ -307,7 +367,15 @@ const TextAnnotator = ({ user }) => {
 
                     {annotations.map((annotation) => (
                         <div key={annotation.id} className="mb-4 p-4 bg-white border rounded shadow">
-                            <p className="font-semibold text-gray-900">{annotation.content}</p>
+                            {editingAnnotationId === annotation.id ? (
+                                <textarea
+                                    className="w-full p-2 border rounded"
+                                    value={editContent}
+                                    onChange={(e) => setEditContent(e.target.value)}
+                                />
+                            ) : (
+                                <p className="font-semibold text-gray-900">{annotation.content}</p>
+                            )}
                             <p className="text-sm italic text-gray-500">
                                 Annotated Text: "{text.slice(annotation.range_start, annotation.range_end)}"
                             </p>
@@ -327,12 +395,31 @@ const TextAnnotator = ({ user }) => {
                                     <ThumbDownIcon className="w-5 h-5" />
                                 </button>
                                 {(annotation.user_id === user.userId || text.owner_id === user.userId) && (
-                                    <button
-                                        onClick={() => deleteAnnotation(annotation.id)}
-                                        className="text-red-700 hover:text-red-900 ml-2"
-                                    >
-                                        <TrashIcon className="w-5 h-5" />
-                                    </button>
+                                    <>
+                                        <button
+                                            onClick={() => {
+                                                setEditingAnnotationId(annotation.id);
+                                                setEditContent(annotation.content);
+                                            }}
+                                            className="text-blue-600 hover:text-blue-800 ml-2"
+                                        >
+                                            Edit
+                                        </button>
+                                        {editingAnnotationId === annotation.id && (
+                                            <button
+                                                onClick={() => editAnnotation(annotation.id)}
+                                                className="bg-green-500 text-white px-2 py-1 rounded ml-2"
+                                            >
+                                                Save
+                                            </button>
+                                        )}
+                                        <button
+                                            onClick={() => deleteAnnotation(annotation.id)}
+                                            className="text-red-700 hover:text-red-900 ml-2"
+                                        >
+                                            <TrashIcon className="w-5 h-5" />
+                                        </button>
+                                    </>
                                 )}
                             </div>
                             {renderReplies(annotation.id)}
@@ -351,6 +438,7 @@ const TextAnnotator = ({ user }) => {
                             </button>
                         </div>
                     ))}
+
                 </div>
             </div>
         </div>
