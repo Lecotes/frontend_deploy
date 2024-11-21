@@ -18,10 +18,10 @@ function Signup({ setUser }) {
       if (response.ok) {
         const data = await response.json();
         setUser(data);
-        alert("Signup successful!");
+        alert("Signup Successful!")
         navigate("/login");
       } else {
-        alert("Signup successful!");
+        alert("Signup Successful!")
       }
     } catch (error) {
       console.error("Error during signup:", error);
