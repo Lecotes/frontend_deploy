@@ -5,7 +5,7 @@ function Notifications({ user }) {
   const [requests, setRequests] = useState([]);
 
   const fetchRequests = () => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/friends/requests?userId=${user.userId}`)
+    fetch(`https://lecotes-backend.onrender.com/api/friends/requests?userId=${user.userId}`)
       .then((response) => response.json())
       .then((data) => setRequests(data))
       .catch((error) => console.error("Error fetching friend requests:", error));
@@ -16,7 +16,7 @@ function Notifications({ user }) {
   }, [user.userId]);
 
   const handleRequest = (requestId, status) => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/friends/request/respond`, {
+    fetch(`https://lecotes-backend.onrender.com/api/friends/request/respond`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ requestId, status }),
