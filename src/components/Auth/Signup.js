@@ -17,7 +17,6 @@ function Signup({ setUser }) {
 
       if (response.ok) {
         const data = await response.json();
-        setUser(data);
         alert("Signup Successful!")
         navigate("/login");
       } else {
