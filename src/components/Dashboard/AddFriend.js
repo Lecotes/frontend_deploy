@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function AddFriendModal({ user, onClose }) {
+function AddFriendModal({ user, onClose, fetchFriends }) {
   const [email, setEmail] = useState("");
 
   const handleAddFriend = () => {
@@ -15,6 +15,7 @@ function AddFriendModal({ user, onClose }) {
           alert("Friend request sent!");
           setEmail(""); // Clear the input
           onClose(); // Close the modal
+          fetchFriends(); // Call the fetchFriends function to refresh the list
         } else {
           alert("Error sending friend request.");
         }

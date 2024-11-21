@@ -10,7 +10,7 @@ function App() {
 
   useEffect(() => {
     fetch('https://lecotes-backend.onrender.com/api/auth/session', {
-        credentials: 'include', // Include session cookies
+        credentials: 'include',
     })
         .then((response) => {
             if (response.ok) {
@@ -23,46 +23,16 @@ function App() {
           setUser(data);
       })
         .catch(() => setUser(null));
-}, []);
-  
+  }, []);
 
   return (
-    <Router
-  future={{
-    v7_startTransition: true,
-    v7_relativeSplatPath: true,
-  }}
->
+    <Router>
       <Routes>
-        {/* Redirect to Dashboard if the user is logged in */}
         <Route path="/" element={!user ? <Navigate to="/login" /> : <Navigate to="/dashboard" />} />
-
-        {/* Login Route */}
-        <Route
-          path="/login"
-          element={!user ? <Login setUser={setUser} /> : <Navigate to="/dashboard" />}
-        />
-
-        {/* Signup Route */}
-        <Route
-          path="/signup"
-          element={!user ? <Signup setUser={setUser} /> : <Navigate to="/dashboard" />}
-        />
-
-        {/* Dashboard Route */}
-        <Route
-          path="/dashboard"
-          element={user ? <Dashboard user={user} setUser={setUser} /> : <Navigate to="/login" />}
-        />
-
-        {/* Text Annotator Route */}
-        <Route
-            path="/text/:id"
-            element={user ? <TextAnnotator user={user} /> : <Navigate to="/login" />}
-        />
-
-
-        {/* Fallback Route */}
+        <Route path="/login" element={!user ? <Login setUser={setUser} /> : <Navigate to="/dashboard" />} />
+        <Route path="/signup" element={!user ? <Signup setUser={setUser} /> : <Navigate to="/dashboard" />} />
+        <Route path="/dashboard" element={user ? <Dashboard user={user} setUser={setUser} /> : <Navigate to="/login" />} />
+        <Route path="/text/:id" element={user ? <TextAnnotator user={user} /> : <Navigate to="/login" />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

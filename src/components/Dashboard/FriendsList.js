@@ -73,6 +73,7 @@ function FriendsList({ user }) {
         <AddFriendModal
           user={user}
           onClose={() => setIsAddFriendModalOpen(false)} // Close the modal
+          fetchFriends={fetchFriends} // Pass the fetchFriends function
         />
       )}
     </div>
